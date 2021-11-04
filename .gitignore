@@ -1,0 +1,10 @@
+extras/
+cplint/
+.vscode
+*.o
+cpplint.py
+execute.sh
+filter_options
+client
+server
+tiburoncin-2.2.1
