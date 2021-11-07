@@ -109,7 +109,10 @@ ssize_t Socket::recv(char *buffer, size_t length){
                         &buffer[total_recv_bytes],
                         length - total_recv_bytes,
                         0);
-        if (recv_bytes != -1){
+        if (recv_bytes == 0){
+            throw "Socket Closed";
+        }
+        else if (recv_bytes != -1){
             total_recv_bytes += recv_bytes;
         }
     }    

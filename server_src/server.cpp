@@ -1,23 +1,51 @@
+#ifndef __SERVER_H__
+#define __SERVER_H__
+
 #include "../common_src/common_protocol.h"
 #include "../common_src/common_socket.h"
+// #include "./server_blocking_queue.h"
+#include "server.h"
 #include <iostream>
+#include <utility>
 
-int main(int argc, char const *argv[]){
-    Protocol protocol;       
-    Socket socket;    
-    socket.listen("localhost", "7778", 50);    
-    Socket client = socket.accept();
-    
-    while(true){
+Server::Server(const char * service){
+    socket.listen("localhost", service, LISTEN_POOL_SIZE);
+}
+
+void Server::serve_client(){
+    Socket client = this->socket.accept();
+    bool is_running = true;
+
+    while(is_running){
         char command_id;
         std::string queue_name;
         std::string message;
-        std::tie(command_id, queue_name, message) = protocol.recv_command(client);
-        std::cout << command_id << ' ' << queue_name << ' ' << message << std::endl;
-        if (command_id == 'o'){
-            protocol.send_message(client,"Respuesta del Pop!");
+        try{
+            std::tie(command_id, queue_name, message) = protocol.recv_command(client);
+            std::cout << command_id << ' ' << queue_name << ' ' << message << std::endl;
+            if (command_id == 'd'){                
+                this->queues[queue_name];
+            }
+            if (command_id == 'u'){                
+                this->queues[queue_name].push(message);
+            }
+            if (command_id == 'o'){
+                protocol.send_message(client,this->queues[queue_name].pop());                
+            }
+        } catch(...){
+            is_running = false;
         }
     }
+}
+
+int main(int argc, char const *argv[]){
+    //Cantidad invalida de parámetros
+    if (argc != 2){
+        return 1;
+    }
+    Server server(argv[1]);
+    server.serve_client();    
     
     return 0;
 }
+#endif
