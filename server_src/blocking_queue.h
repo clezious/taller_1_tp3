@@ -1,4 +1,4 @@
-#ifndef __BLOCKING_QUEUE__
+#ifndef __BLOCKING_QUEUE_H__
 #define __BLOCKING_QUEUE_H__
 #include <queue>
 #include <mutex>

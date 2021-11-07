@@ -1,6 +1,3 @@
-#ifndef __SERVER_H__
-#define __SERVER_H__
-
 #include "../common_src/common_protocol.h"
 #include "../common_src/common_socket.h"
 // #include "./server_blocking_queue.h"
@@ -24,19 +21,20 @@ void Server::serve_client(){
             std::tie(command_id, queue_name, message) = protocol.recv_command(client);
             std::cout << command_id << ' ' << queue_name << ' ' << message << std::endl;
             if (command_id == 'd'){                
-                this->queues[queue_name];
+                this->queues.get_or_add_queue(queue_name);
             }
             if (command_id == 'u'){                
-                this->queues[queue_name].push(message);
+                this->queues.get_or_add_queue(queue_name).push(message);
             }
             if (command_id == 'o'){
-                protocol.send_message(client,this->queues[queue_name].pop());                
+                protocol.send_message(client,this->queues.get_or_add_queue(queue_name).pop());                
             }
         } catch(...){
             is_running = false;
         }
     }
 }
+
 
 int main(int argc, char const *argv[]){
     //Cantidad invalida de parámetros
@@ -48,4 +46,4 @@ int main(int argc, char const *argv[]){
     
     return 0;
 }
-#endif
+
