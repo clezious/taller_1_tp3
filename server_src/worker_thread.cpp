@@ -1,5 +1,6 @@
 #include "worker_thread.h"
 #include <string>
+#include <utility>
 
 WorkerThread::WorkerThread(Socket socket, 
                         QueuesMonitor& queues, 
