@@ -14,6 +14,7 @@ class Protocol{
             {"push",'u'},
             {"pop",'o'},
         };
+
     public:
         // Para recibir un mensaje de un socket, siguiendo el
         // formato de 2 bytes con el largo del msg, y luego el msg.        

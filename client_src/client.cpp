@@ -16,7 +16,7 @@ void Client::split_command(std::vector<std::string>& vector,
     std::string token;    
     for (int i = 0; i < 3; i++){
         char delimiter = i == 2 ? '\n' : ' ';
-        if(! std::getline(stream, token, delimiter)){
+        if (! std::getline(stream, token, delimiter)){
             break;
         }
         vector.push_back(token);
@@ -31,7 +31,7 @@ void Client::exec_command(const std::vector<std::string>& vector){
         this->protocol.request(this->socket,command,vector[1],vector[2]);
     } else if ((command == "pop" || command == "define") && vector.size() > 1){
         this->protocol.request(this->socket,command,vector[1]);
-        if ( command == "pop"){
+        if (command == "pop"){
             std::cout << this->protocol.recv_message(this->socket) << std::endl;
         }
     } else { throw "Invalid Command";}

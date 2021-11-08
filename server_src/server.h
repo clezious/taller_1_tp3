@@ -4,19 +4,23 @@
 #include "../common_src/common_socket.h"
 #include "./blocking_queue.h"
 #include "./queues_monitor.h"
-#include <unordered_map>
 #include <string>
-#include <queue>
+#include <vector>
+#include <thread>
+#include <atomic>
+
 
 #define LISTEN_POOL_SIZE 50
 class Server{
     private:
         Protocol protocol;
         Socket socket;                         
-        QueuesMonitor queues;   
+        QueuesMonitor queues;        
+        std::atomic<bool> is_running;        
     public:
-        Server(const char * service);        
-        void serve_client();
+        explicit Server(const char * service);        
+        void run();
+        void main_loop();
 };
 
 #endif

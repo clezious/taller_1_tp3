@@ -10,7 +10,8 @@ class Socket{
                     const char *host, 
                     const char * service, 
                     bool server);
-        Socket(int file_descriptor);
+        explicit Socket(int file_descriptor);
+
     public:
         Socket();
         ~Socket();
@@ -22,6 +23,9 @@ class Socket{
         Socket(Socket&& other);
         Socket& operator=(Socket&& other);
         
+        //Fuerza el cierre del socket.
+        void force_stop();
+
         //Abre una conexión al host y servicio indicados.
         void connect(const char *host, const char *service);
         //Realiza un bind y listen en en host y servicio indicados.

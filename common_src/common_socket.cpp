@@ -7,25 +7,21 @@
 
 #include "./common_socket.h"
 
-Socket::Socket(){
-    std::cout << "SOCKET CREADO" << std::endl;
+Socket::Socket(){    
     this->file_descriptor = socket(AF_INET, SOCK_STREAM, 0);
 }
 
-Socket::Socket(int file_descriptor){
-    std::cout << "SOCKET CREADO CON FD" << std::endl;
+Socket::Socket(int file_descriptor){    
     this->file_descriptor = file_descriptor;
 }
 
-Socket::Socket(Socket&& other){
-    std::cout << "SOCKET CREADO POR MOVIMIENTO" << std::endl;
+Socket::Socket(Socket&& other){    
     this->file_descriptor = other.file_descriptor;
     other.file_descriptor = -1;
 }
 
-Socket& Socket::operator=(Socket&& other){
-    std::cout << "SOCKET ASIGNADO POR MOVIMIENTO" << std::endl;
-    if(this != &other){
+Socket& Socket::operator=(Socket&& other){    
+    if (this != &other){
         this->file_descriptor = other.file_descriptor;
         other.file_descriptor = -1;
     }
@@ -33,11 +29,17 @@ Socket& Socket::operator=(Socket&& other){
 }
 
 Socket::~Socket(){
-    if(this->file_descriptor != -1){
+    if (this->file_descriptor != -1){
         shutdown(this->file_descriptor,SHUT_RDWR);
         close(this->file_descriptor);
     }
-    std::cout << "SOCKET DESTRUIDO" << std::endl;
+}
+
+void Socket::force_stop(){
+    if (this->file_descriptor != -1){ 
+        shutdown(this->file_descriptor,SHUT_RDWR);
+        close(this->file_descriptor);
+    }      
 }
 
 void Socket::_getaddrinfo(struct addrinfo **address, 
@@ -82,6 +84,9 @@ void Socket::listen(const char *host, const char *service, int max_conn_pool){
 
 Socket Socket::accept(){
     int file_descriptor = ::accept(this->file_descriptor, 0, 0);
+    if (file_descriptor == -1){
+        throw "Error Socket accept";
+    }
     return std::move(Socket(file_descriptor));
 }
 
@@ -94,9 +99,10 @@ ssize_t Socket::send(const char *buffer, size_t length){
                               &buffer[total_sent_bytes],
                               length - total_sent_bytes,
                               MSG_NOSIGNAL);
-        if (sent_bytes != -1){
-            total_sent_bytes += sent_bytes;
+        if (sent_bytes == -1){
+            throw "Error Socket send";
         }
+        total_sent_bytes += sent_bytes;
     }    
     return total_sent_bytes;
 }
@@ -111,8 +117,7 @@ ssize_t Socket::recv(char *buffer, size_t length){
                         0);
         if (recv_bytes == 0){
             throw "Socket Closed";
-        }
-        else if (recv_bytes != -1){
+        } else if (recv_bytes != -1){
             total_recv_bytes += recv_bytes;
         }
     }    
