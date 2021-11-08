@@ -14,7 +14,9 @@ class BlockingQueue{
     public:
         BlockingQueue();
         void close();
+        //Inserta un elemento en la última posicion de la cola.
         void push(const std::string& item);
+        //Quita el primer elemento de la cola y lo devuelve.
         std::string pop();
 };
 

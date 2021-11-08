@@ -42,7 +42,6 @@ void WorkerThread::join(){
 bool WorkerThread::is_alive(){
     return this->is_running;
 }
-void WorkerThread::stop(){
-    // this->is_running = false;
+void WorkerThread::stop(){    
     this->socket.force_stop();
 }

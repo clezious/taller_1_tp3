@@ -8,6 +8,7 @@ class QueuesMonitor{
     private:
         std::mutex mutex;
         std::condition_variable condition_variable;
+        // El mapa donde se guardarán las colas por nombre.
         std::unordered_map<std::string, BlockingQueue> queues;    
     public:
         // Se devuelve una referencia a la cola con el "queue_name"
