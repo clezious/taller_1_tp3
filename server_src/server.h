@@ -18,8 +18,7 @@ class Server{
         QueuesMonitor queues;        
         std::atomic<bool> is_running;        
     public:
-        explicit Server(const char * service);        
-        void run();
+        explicit Server(const char * service);
         void main_loop();
 };
 
